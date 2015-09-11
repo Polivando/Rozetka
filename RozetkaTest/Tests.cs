@@ -12,7 +12,7 @@ namespace RozetkaTest
     {
         static LaptopPage page;
 
-        public void Initialize()
+        public static void Initialize()
         {
             Cons.driver = new FirefoxDriver();
             Cons.driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
@@ -102,7 +102,7 @@ namespace RozetkaTest
         }
 
         [Test]
-        public void TestResolution()//впилить нажатие на нужное троеточие
+        public void TestResolution()
         {
             Initialize();
             Cons.log(DateTime.Now.ToString() + " Performing TestResolution");
@@ -119,17 +119,17 @@ namespace RozetkaTest
             CPU(page.FilterPentium);
             CPU(page.FilterAmdE);
             Clean();
-        }//впилить троеточие
+        }
 
         [Test]
-        public void TestKeyboard()
+        public static void TestKeyboard()
         {
             Initialize();
             Cons.log(DateTime.Now.ToString() + " Performing TestKeyboard");
             Keyboard(page.FilterUkrainisch);
             Keyboard(page.FilterKeinUkrainisch);
             Clean();
-        }//впилить разворот
+        }
 
         [Test]
         public void TestColor()
@@ -138,7 +138,7 @@ namespace RozetkaTest
             Cons.log(DateTime.Now.ToString() + " Performing TestColor");
             Color(page.FilterBlue);
             Clean();
-        }//впилить разворот
+        }
 
         void Price(LaptopPage newPage)
         {
@@ -225,6 +225,7 @@ namespace RozetkaTest
         
         void Resolution(IWebElement checkbox, bool exact = true)
         {
+            page.ResolutionAll.Click();
             checkbox.Click();
             bool passed = true;
             var newPage = new LaptopPage();
@@ -249,6 +250,7 @@ namespace RozetkaTest
 
         void CPU(IWebElement checkbox)
         {
+            page.CPUAll.Click();
             checkbox.Click();
             bool passed = true;
             var newPage = new LaptopPage();
@@ -269,13 +271,14 @@ namespace RozetkaTest
             newPage.BtnReset.Click();
         }
 
-        void Keyboard(IWebElement checkbox)
+        static void Keyboard(IWebElement checkbox)
         {
+            page.KeyboardUnfold.Click();
+            var key = page.getKey(checkbox);
             checkbox.Click();
             bool passed = true;
             var newPage = new LaptopPage();
             newPage.getResults();
-            var key = newPage.getKey(checkbox);
             Cons.log("Украинская раскладка "+key);
             foreach (var item in newPage.results)
                 VerifyKeyboard(item, key);
@@ -285,11 +288,12 @@ namespace RozetkaTest
 
         void Color(IWebElement checkbox)
         {
+            page.ColorUnfold.Click();
+            var key = page.getKey(checkbox);
             checkbox.Click();
             bool passed = true;
             var newPage = new LaptopPage();
             newPage.getResults();
-            var key = newPage.getKey(checkbox);
             Cons.log("Color " + key);
             foreach (var item in newPage.results)
                 VerifyColor(item, key);
@@ -297,14 +301,14 @@ namespace RozetkaTest
             newPage.BtnReset.Click();
         }
 
-        void VerifyKeyboard(IWebElement item, string key)
+        static void VerifyKeyboard(IWebElement item, string key)
         {
             var currHandle = Cons.driver.CurrentWindowHandle;
             Cons.OpenInNewTab(item);
             var about = new AboutPage();
             about.Characteristics.Click();
             var characteristics = new CharacteristicsPage();
-            var value = characteristics.getKeyboard(key);
+            var value = characteristics.getKeyboard();
             bool passed = true;
             if (key != value)
             {
@@ -326,7 +330,7 @@ namespace RozetkaTest
             var characteristics = new CharacteristicsPage();
             var value = characteristics.getColor(key);
             bool passed = true;
-            if (key != value)
+            if (!value.Contains(key))
             {
                 passed = false;
                 Cons.log("Results mismatch");
@@ -336,7 +340,7 @@ namespace RozetkaTest
             characteristics.Overview.SendKeys(Keys.Control + "w");
             Cons.driver.SwitchTo().Window(currHandle);
         }
-        public void Clean()
+        public static void Clean()
         {
             Cons.driver.Close();
         }

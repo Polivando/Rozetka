@@ -23,7 +23,7 @@ namespace RozetkaTest
             PageFactory.InitElements(Cons.driver, this);
         }
 
-        public string getKeyboard(string key)
+        public string getKeyboard()
         {
             var rows = Table.FindElements(By.ClassName("pp-characteristics-tab-i"));
             foreach (var item in rows)

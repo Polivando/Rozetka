@@ -11,7 +11,7 @@ namespace RozetkaTest
     {
         static void Main(string[] args)
         {
-            //Tests.TestKeyboard();
+            Tests.TestKeyboard();
         }
 
         

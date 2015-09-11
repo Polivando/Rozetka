@@ -43,11 +43,17 @@ namespace RozetkaTest
         [FindsBy(How = How.XPath, Using = "//*[@id='sort_20861']/li[2]/label/a/span")]
         public IWebElement Filter13Inch { get; set; }
 
+        [FindsBy(How = How.XPath, Using = "//*[@id='filter_parameters_form']/div[5]/div[2]/span/img")]
+        public IWebElement ResolutionAll { get; set; }
+
         [FindsBy(How = How.XPath, Using = "//*[@id='sort_25800']/li[4]/label/a/span")]
         public IWebElement FilterHD { get; set; }
 
         [FindsBy(How = How.XPath, Using = "//*[@id='sort_25800']/li[5]/label/a/span")]
         public IWebElement FilterMoarHD { get; set; }
+
+        [FindsBy(How = How.XPath, Using = "//*[@id='filter_parameters_form']/div[9]/div[2]/span/img")]
+        public IWebElement CPUAll { get; set; }
 
         [FindsBy(How = How.XPath, Using = "//*[@id='sort_processor']/li[5]/label/a/span")]
         public IWebElement FilterPentium { get; set; }
@@ -55,11 +61,17 @@ namespace RozetkaTest
         [FindsBy(How = How.XPath, Using = "//*[@id='sort_processor']/li[9]/label/a/span")]
         public IWebElement FilterAmdE { get; set; }
 
+        [FindsBy(How = How.XPath, Using = "//*[@id='filter_parameters_form']/div[18]/div[1]/span")]
+        public IWebElement KeyboardUnfold { get; set; }
+
         [FindsBy(How = How.XPath, Using = "//*[@id='sort_56017']/li[1]/label/a/span")]
         public IWebElement FilterUkrainisch { get; set; }
 
         [FindsBy(How = How.XPath, Using = "//*[@id='sort_56017']/li[2]/label/a/span")]
         public IWebElement FilterKeinUkrainisch { get; set; }
+
+        [FindsBy(How = How.XPath, Using = "//*[@id='filter_parameters_form']/div[20]/div[1]/span[1]")]
+        public IWebElement ColorUnfold { get; set; }
 
         [FindsBy(How = How.XPath, Using = "//*[@id='sort_21737']/li[2]/label/a/span")]
         public IWebElement FilterBlue { get; set; }
@@ -120,7 +132,7 @@ namespace RozetkaTest
                 temp = item.GetAttribute("value");
             }
             return Convert.ToInt32(temp);
-        } //write anotherone
+        }
 
         //gets manufacturer string from result item
         public string getManufacturer (IWebElement item)
@@ -131,7 +143,7 @@ namespace RozetkaTest
         //gets text value of checkbox
         public string getKey(IWebElement checkbox)
         {
-            return checkbox.FindElement(By.ClassName("filter-parametrs-i-l-i-default-title")).Text;
+            return checkbox.FindElement(By.TagName("i")).Text;
         }
 
         //gets short description
