@@ -1,11 +1,11 @@
-﻿//using NUnit.Framework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
+using TestFramework.Pages;
 
-namespace TestsWithoutFramework
+namespace TestsUseFramework
 {
     [TestClass]
     public class UnitTest1
@@ -21,7 +21,7 @@ namespace TestsWithoutFramework
             options.AddArgument("start-maximized");
 
             driver = new ChromeDriver(options);
-            driver.Navigate().GoToUrl(_url);            
+            driver.Navigate().GoToUrl(_url);
             new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(d => d.Url == _url);
         }
 
@@ -34,18 +34,18 @@ namespace TestsWithoutFramework
         [TestMethod]
         public void NegativeMinPriceShouldUpdatePriceToMinimalAvailable()
         {
-            //arrange
-            Func<IWebDriver, IWebElement> getMinPriceField = d => d.FindElement(By.Id("price[min]"));
-            var okButton = driver.FindElement(By.Id("submitprice"));
+            //Arrange
+            var booksResultsPage = new FictionBooksPage(driver);
+            
             var priceValueToSet = -1;
 
-            //act
-            getMinPriceField.Invoke(driver).SendKeys(priceValueToSet.ToString());
-            okButton.Click();
+            //Act
+            booksResultsPage.MinimumPrice.SendKeys(priceValueToSet.ToString());
+            booksResultsPage.FilterByPrice.Click();
 
-            //assert
-            var actualValue = int.Parse(getMinPriceField.Invoke(driver).GetAttribute("value"));
-            Assert.IsTrue(actualValue - priceValueToSet > 0);
+            //Assert
+            var actualMinimumPrice = int.Parse(booksResultsPage.MinimumPrice.GetAttribute("value"));
+            Assert.IsTrue(actualMinimumPrice - priceValueToSet > 0);
         }
     }
 }
