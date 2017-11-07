@@ -17,7 +17,7 @@ namespace TestsUseFramework
         public void TestInitialize()
         {
             var options = new ChromeOptions();
-            options.AddArgument("--test-type");
+            //options.AddArgument("--test-type");
             options.AddArgument("start-maximized");
 
             driver = new ChromeDriver(options);
@@ -40,11 +40,10 @@ namespace TestsUseFramework
             var priceValueToSet = -1;
 
             //Act
-            booksResultsPage.MinimumPrice.SendKeys(priceValueToSet.ToString());
-            booksResultsPage.FilterByPrice.Click();
+            booksResultsPage.FilterByPriceRange(priceValueToSet);
 
             //Assert
-            var actualMinimumPrice = int.Parse(booksResultsPage.MinimumPrice.GetAttribute("value"));
+            var actualMinimumPrice = booksResultsPage.GetMinPrice();
             Assert.IsTrue(actualMinimumPrice - priceValueToSet > 0);
         }
     }
