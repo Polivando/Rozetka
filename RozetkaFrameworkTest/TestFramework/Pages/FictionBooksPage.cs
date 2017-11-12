@@ -1,5 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
+using OpenQA.Selenium.Support.UI;
+using System;
 
 namespace TestFramework.Pages
 {
@@ -21,6 +23,11 @@ namespace TestFramework.Pages
 
         [FindsBy(How = How.Id, Using = "submitprice")]
         public IWebElement FilterByPrice { get; set; }
+
+        public void WaitForPageLoad(string url)
+        {
+            new WebDriverWait(_driver, TimeSpan.FromSeconds(5)).Until(d => d.Url == url);
+        }
 
         public FictionBooksPage SetMinimumPrice(int? price)
         {
@@ -47,14 +54,28 @@ namespace TestFramework.Pages
             return SetMinimumPrice(minPrice).SetMaximumPrice(maxPrice).SubmitPriceFilter();
         }
 
-        public int GetMinPrice()
+        public int? GetMinPrice()
         {
-            return int.Parse(MinimumPrice.GetAttribute("value"));
+            var stringValue = MinimumPrice.GetAttribute("value");
+            if (stringValue == null | stringValue == "")
+                return null;
+            else
+            {
+                int.TryParse(stringValue, out int result);
+                return result;
+            }
         }
 
-        public int GetMaxPrice()
+        public int? GetMaxPrice()
         {
-            return int.Parse(MaximumPrice.GetAttribute("value"));
+            var stringValue = MaximumPrice.GetAttribute("value");
+            if (stringValue == null | stringValue == "")
+                return null;
+            else
+            {
+                int.TryParse(stringValue, out int result);
+                return result;
+            }
         }
     }
 }
