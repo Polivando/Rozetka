@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+using System;
 using TestFramework.Pages;
 
 namespace TestsUseFramework
@@ -15,11 +17,11 @@ namespace TestsUseFramework
         public void TestInitialize()
         {
             var options = new ChromeOptions();
-            //options.AddArgument("--test-type");
             options.AddArgument("start-maximized");
 
             driver = new ChromeDriver(options);
             driver.Navigate().GoToUrl(_url);
+            new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(d => d.Url == _url);
         }
 
         [TestCleanup]
@@ -33,12 +35,12 @@ namespace TestsUseFramework
         {
             //Arrange
             var booksResultsPage = new FictionBooksPage(driver);
-            booksResultsPage.WaitForPageLoad(_url);
-            
             var priceValueToSet = -1;
 
             //Act
-            booksResultsPage.FilterByPriceRange(priceValueToSet);
+            booksResultsPage
+                .SetMinimumPrice(priceValueToSet)
+                .SubmitPriceFilter();
 
             //Assert
             var actualMinimumPrice = booksResultsPage.GetMinPrice();

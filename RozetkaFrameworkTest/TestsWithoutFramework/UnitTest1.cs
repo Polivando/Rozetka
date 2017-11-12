@@ -16,7 +16,6 @@ namespace TestsWithoutFramework
         public void TestInitialize()
         {
             var options = new ChromeOptions();
-            options.AddArgument("--test-type");
             options.AddArgument("start-maximized");
 
             driver = new ChromeDriver(options);
@@ -34,16 +33,17 @@ namespace TestsWithoutFramework
         public void NegativeMinPriceShouldUpdatePriceToMinimalAvailable()
         {
             //arrange
-            Func<IWebDriver, IWebElement> getMinPriceField = d => d.FindElement(By.Id("price[min]"));
+            var getMinPriceField = driver.FindElement(By.Id("price[min]"));
             var okButton = driver.FindElement(By.Id("submitprice"));
             var priceValueToSet = -1;
 
             //act
-            getMinPriceField.Invoke(driver).SendKeys(priceValueToSet.ToString());
+            getMinPriceField.SendKeys(priceValueToSet.ToString());
             okButton.Click();
 
             //assert
-            var actualValue = int.Parse(getMinPriceField.Invoke(driver).GetAttribute("value"));
+            getMinPriceField = driver.FindElement(By.Id("price[min]"));
+            var actualValue = int.Parse(getMinPriceField.GetAttribute("value"));
             Assert.IsTrue(actualValue - priceValueToSet > 0);
         }
     }
