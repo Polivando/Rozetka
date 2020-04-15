@@ -10,7 +10,7 @@ namespace TestsWithoutFramework
     public class UnitTest1
     {
         private IWebDriver driver;
-        private string _url = "https://rozetka.com.ua/hudojestvennaya-literatura/c4326593/";
+        private string _url = "https://rozetka.com.ua/ua/hudojestvennaya-literatura/c4326593/";
 
         [TestInitialize]
         public void TestInitialize()
@@ -30,21 +30,20 @@ namespace TestsWithoutFramework
         }
 
         [TestMethod]
-        public void NegativeMinPriceShouldUpdatePriceToMinimalAvailable()
+        public void NegativeMinPriceShouldBlockUserFromFiltering()
         {
             //arrange
-            var getMinPriceField = driver.FindElement(By.Id("price[min]"));
-            var okButton = driver.FindElement(By.Id("submitprice"));
             var priceValueToSet = -1;
 
             //act
-            getMinPriceField.SendKeys(priceValueToSet.ToString());
-            okButton.Click();
+            driver.FindElement(By.CssSelector("[formcontrolname='min']")).SendKeys(priceValueToSet.ToString());
 
             //assert
-            getMinPriceField = driver.FindElement(By.Id("price[min]"));
-            var actualValue = int.Parse(getMinPriceField.GetAttribute("value"));
-            Assert.IsTrue(actualValue - priceValueToSet > 0);
+            var isMinFieldRed = driver.FindElement(By.CssSelector("[formcontrolname='min']")).GetAttribute("class").Contains("form_state_error");
+            var isMaxFieldRed = driver.FindElement(By.CssSelector("[formcontrolname='max']")).GetAttribute("class").Contains("form_state_error");
+            var isSubmitButtonEnabled = driver.FindElement(By.CssSelector("[type='submit']")).Enabled;
+            Assert.IsFalse(isSubmitButtonEnabled);
+            Assert.IsTrue(isMaxFieldRed && isMaxFieldRed);
         }
     }
 }
