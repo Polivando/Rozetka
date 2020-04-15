@@ -11,7 +11,7 @@ namespace TestsUseFramework
     public class UnitTest1
     {
         private IWebDriver driver;
-        private string _url = "https://rozetka.com.ua/hudojestvennaya-literatura/c4326593/";
+        private string _url = "https://rozetka.com.ua/ua/hudojestvennaya-literatura/c4326593/";
 
         [TestInitialize]
         public void TestInitialize()
@@ -31,20 +31,20 @@ namespace TestsUseFramework
         }
 
         [TestMethod]
-        public void NegativeMinPriceShouldUpdatePriceToMinimalAvailable()
+        public void NegativeMinPriceShouldBlockUserFromFiltering()
         {
             //Arrange
             var booksResultsPage = new FictionBooksPage(driver);
             var priceValueToSet = -1;
 
             //Act
-            booksResultsPage
-                .SetMinimumPrice(priceValueToSet)
-                .SubmitPriceFilter();
+            booksResultsPage.SetMinimumPrice(priceValueToSet);
 
             //Assert
-            var actualMinimumPrice = booksResultsPage.GetMinPrice();
-            Assert.IsTrue(actualMinimumPrice - priceValueToSet > 0);
+            Assert.IsTrue(
+                ! booksResultsPage.CanSubmitPriceFilter
+                && booksResultsPage.MinPriceHasError
+                && booksResultsPage.MaxPriceHasError);
         }
     }
 }

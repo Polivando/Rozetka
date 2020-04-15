@@ -13,15 +13,19 @@ namespace TestFramework.Pages
             PageFactory.InitElements(driver, this);
         }
 
-        [FindsBy(How = How.Id, Using = "price[min]")]
+        [FindsBy(How = How.CssSelector, Using = "[formcontrolname='min']")]
         public IWebElement MinimumPrice;
 
-        [FindsBy(How = How.Id, Using = "price[max]")]
+        [FindsBy(How = How.CssSelector, Using = "[formcontrolname='min']")]
         public IWebElement MaximumPrice;
 
-        [FindsBy(How = How.Id, Using = "submitprice")]
+        [FindsBy(How = How.CssSelector, Using = "[type='submit']")]
         public IWebElement FilterByPrice;
-        
+
+        public bool CanSubmitPriceFilter => FilterByPrice.Enabled;
+        public bool MinPriceHasError => MinimumPrice.GetAttribute("class").Contains("form_state_error");
+        public bool MaxPriceHasError => MaximumPrice.GetAttribute("class").Contains("form_state_error");
+
         public FictionBooksPage SetMinimumPrice(int? price)
         {
             if (price == null) return this;

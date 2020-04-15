@@ -43,7 +43,7 @@ namespace TestsWithoutFramework
             var isMaxFieldRed = driver.FindElement(By.CssSelector("[formcontrolname='max']")).GetAttribute("class").Contains("form_state_error");
             var isSubmitButtonEnabled = driver.FindElement(By.CssSelector("[type='submit']")).Enabled;
             Assert.IsFalse(isSubmitButtonEnabled);
-            Assert.IsTrue(isMaxFieldRed && isMaxFieldRed);
+            Assert.IsTrue(isMinFieldRed && isMaxFieldRed);
         }
     }
 }
